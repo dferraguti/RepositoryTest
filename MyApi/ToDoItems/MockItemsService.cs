@@ -1,11 +1,23 @@
-﻿namespace MyApi.ToDoItems
+﻿using Microsoft.Extensions.Options;
+using MyApi.Configuration;
+
+namespace MyApi.ToDoItems
 {
     public class MockItems : ITodoItems
     {
-        private static List<TodoItem>
-            todoItems = new List<TodoItem>() {
-          new TodoItem (1,"1",false, "Sport"),
-          new TodoItem (2,"2", true, "Hobbies") };
+        private readonly IConfiguration configuration;
+        private readonly IOptions<AppSettings> appSettings;
+
+        public MockItems(IConfiguration configuration, IOptions<AppSettings> appSettings)
+        {
+            this.configuration = configuration;
+            this.appSettings = appSettings;
+        }
+
+        private static List<TodoItem> todoItems = new List<TodoItem>() { new TodoItem (1,"1",false, "Sport"), new TodoItem (2,"2", true, "Hobbies")};
+        
+
+
 
         public async Task<TodoItem> CreateItem(CreateTodoItem newItem)
         {
@@ -32,6 +44,8 @@
 
         public async Task<List<TodoItem>> GetAllItems()
         {
+            var miovalore = configuration["miovalore"]; //Prendo i valori dal mio webconfig (appsettings json)
+            var x = appSettings.Value.A;
             await Task.Delay(1000);
             return todoItems;
         }
